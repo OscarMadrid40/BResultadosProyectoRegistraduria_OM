@@ -3,35 +3,27 @@ from Modelos.Resultado import Resultado
 from bson import ObjectId
 
 class RepositorioResultado(InterfaceRepositorio[Resultado]):
-    def getListadoInscritosEnMesas(self, idMesa):
-        print("Mostrando una mesa con sus candidatos")
-        theQuery = {"mesa.$id": ObjectId(idMesa)}
-        return self.query(theQuery)
 
-    def getListadoCandidatosEnPartidos(self, idPartido):
-        print("Mostrando un partido con sus candidatos")
-        theQuery = {"partido.$id": ObjectId(idPartido)}
-        return self.query(theQuery)
-
-    def getMesaMayorAMenor(self):
-        query1 = {
-            "$group": {
-                "_id": "mesa",
-                "max": {
-                    "$max": "$mesa_final"
-                },
-                "doc": {
-                    "$first": "$$ROOT"
-                }
-            }
-        }
-        pipeline = [query1]
-        return self.queryAggregation(pipeline)
-
-    def test(self, idMesa):
-        query1 = {
+    def getTotalVotosPorMesa(self, idMesa):
+        print("Mostrando el total de votos en una mesa")
+        query = {
             "$match": {"mesa.$id": ObjectId(idMesa)}
         }
-        pipeline = [query1]
+        query1 = {
+            "$group":{
+                "_id":"$mesa",
+                "totalVotosEnMesas":{
+                    "$sum":"$voto",
+                },
+
+                "doc":{"$first":"$$ROOT" }
+            }
+        }
+        query2 = {
+            "$sort":{
+                "suma":1
+            }
+        }
+        pipeline = [query,query1,query2]
         return self.queryAggregation(pipeline)
 

@@ -39,7 +39,6 @@ class ControladorResultado():
     def update(self,id,infoResultado, idCandidato, idMesa):
         print("Actualizando un resultado")
         elResultado = Resultado(self.repositorioResultado.findById(id))
-        elResultado.voto = infoResultado["voto"]
         elCandidato = Candidato(self.repositorioCandidato.findById(idCandidato))
         laMesa = Mesa(self.repositorioMesa.findById(idMesa))
         elResultado.candidato = elCandidato
@@ -54,8 +53,21 @@ class ControladorResultado():
     Obtener todos los candidatos inscritos en una mesa
     """
 
-    def listarInscritosEnMesa(self, idMesa):
-        return self.repositorioResultado.getListadoInscritosEnMesas(idMesa)
+    def totalVotosPorMesa(self, idMesa):
+        response = {}
+        try:
+            print("totalVotosPorMesa ", idMesa, " consultando")
+            res = self.repositorioResultado.getTotalVotosPorMesa(idMesa)
+            response = res
+        except:
+            response = {
+                "err": "Ocurrió un error en la consulta",
+                "result": False
+            }
+        return response
 
-    def listarCandidatosEnPartidos(self,idPartido):
-        return self.repositorioResultado.getListadoCandidatosEnPartidos(idPartido)
+
+
+
+
+

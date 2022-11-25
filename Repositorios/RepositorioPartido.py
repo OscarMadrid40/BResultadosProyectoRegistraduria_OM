@@ -1,4 +1,16 @@
 from Repositorios.InterfaceRepositorio import InterfaceRepositorio
 from Modelos.Partido import Partido
 class RepositorioPartido(InterfaceRepositorio[Partido]):
-    pass
+
+    def contidadVotosPorMesa(self,idMesa):
+        query = {
+            "$group":{
+                "_id":"$partido",
+                "total":{
+                    "$sum":"$cantidad_votos"
+                },
+                "doc":{"$first":"$$ROOT"}
+            }
+        }
+        pipeLine = [query]
+        return self.queryAggregation(pipeLine)

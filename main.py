@@ -138,14 +138,9 @@ def eliminarResultado(idResultado):
    json=miControladorResultado.delete(idResultado)
    return jsonify(json)
 
-@app.route("/resultados/mesas/<string:idMesa>",methods=['GET'])
-def inscritosEnMesa(idMesa):
-   json=miControladorResultado.listarInscritosEnMesa(idMesa)
-   return jsonify(json)
-
-@app.route("/resultados/partidos/<string:idPartido>",methods=['GET'])
-def candidatosEnPartido(idPartido):
-   json=miControladorResultado.listarCandidatosEnPartidos(idPartido)
+@app.route("/resultados/mesas/<string:id>",methods=['GET'])
+def getTotalMesaPorId(id):
+   json = miControladorResultado.totalVotosPorMesa(id)
    return jsonify(json)
 
 """
